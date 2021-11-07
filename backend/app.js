@@ -2,6 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require("cors");
 const path = require('path');
+const mongooseExpressErrorHandler = require('mongoose-express-error-handler');
+const mongoKey = require('./mongoKey');
+const helmet = require("helmet");
+
+const app = express();
 
 
 const userRoutes = require('./routes/user');
@@ -9,7 +14,7 @@ const saucesRoutes = require('./routes/sauce');
 
 
 
-mongoose.connect('mongodb+srv://arthurmeunier:MehCyMfL3yNOn8Pu@cluster0.5cgyf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+mongoose.connect(mongoKey,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
@@ -29,5 +34,7 @@ app.use(express.json());
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/auth', userRoutes);
 app.use('/api/sauces', saucesRoutes);
+app.use(mongooseExpressErrorHandler);
+app.use(helmet());
 
 module.exports = app;

@@ -4,7 +4,6 @@ const User = require('../models/user');
 
 // FONCTION SIGNUP //
 exports.signup = (req, res, next) => {
-  console.log('route Signup');
   // On crypte le mot de passe
   bcrypt.hash(req.body.password, 10)
     .then(hash => {
@@ -23,7 +22,6 @@ exports.signup = (req, res, next) => {
 
 // FONCTION LOGIN //
 exports.login = (req, res, next) => {
-  console.log('route Login');
   User.findOne({ email: req.body.email })
   // On récupère l'user de la base qui correspond à l'adresse mail entrée
     .then(user => {
@@ -38,7 +36,7 @@ exports.login = (req, res, next) => {
           if (!valid) {
             return res.status(401).json({ error: 'Mot de passe incorrect !' });
           }
-          // --- Si la comparaison est bonne, on renvoie l'userId est un token
+          // --- Si la comparaison est bonne, on renvoie l'userId et un token
           res.status(200).json({
             userId: user._id,
             token: jwt.sign(
